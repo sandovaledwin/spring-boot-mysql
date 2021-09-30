@@ -8,6 +8,7 @@ import com.creaskills.accessingdatamysql.Repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin
 @RestController
 @RequestMapping(path="/task")
 public class TaskController {
