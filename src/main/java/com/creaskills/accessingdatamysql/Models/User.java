@@ -1,9 +1,8 @@
 package com.creaskills.accessingdatamysql.Models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "user")
@@ -22,28 +21,25 @@ public class User {
     @Column(name = "role")
     private String role;
 
+    @OneToMany(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id", referencedColumnName = "user_id")
+    private List<Course> courses = new ArrayList<>();
+
+    public User() {
+    }
+
+    public User(int userId, String userName, String password) {
+        this.userName = userName;
+        this.password = password;
+        this.userId = userId;
+    }
 
     public User(int userId, String userName, String password, String role) {
-        super();
         this.userId = userId;
         this.userName = userName;
         this.password = password;
         this.role = role;
     }
-
-
-    public User() {
-        super();
-    }
-
-
-    public User(int userId, String userName, String password) {
-        super();
-        this.userName = userName;
-        this.password = password;
-        this.userId = userId;
-    }
-
 
     public String getRole() {
         return role;
@@ -84,6 +80,13 @@ public class User {
         this.password = password;
     }
 
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
+    }
 
     @Override
     public int hashCode() {
@@ -93,7 +96,7 @@ public class User {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null || !(obj instanceof User))
+        if (!(obj instanceof User))
             return false;
         return this.userId == ((User) obj).getUserId();
     }

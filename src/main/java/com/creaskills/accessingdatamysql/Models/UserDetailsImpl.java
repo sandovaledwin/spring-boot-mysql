@@ -19,7 +19,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<GrantedAuthority> grantedAuthorities=new ArrayList<GrantedAuthority>();
+        List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_"+this.user.getRole().toUpperCase()));
 //		System.out.println("inside details impl "+grantedAuthorities.get(0).getAuthority());
         return grantedAuthorities;
@@ -27,7 +27,6 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getPassword() {
-
         return this.user.getPassword();
     }
 
