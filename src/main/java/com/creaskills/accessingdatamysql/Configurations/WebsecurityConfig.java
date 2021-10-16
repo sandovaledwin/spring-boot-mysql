@@ -49,7 +49,10 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
         //http.headers().frameOptions().disable();
 
         http.authorizeRequests()
-                .antMatchers(HttpMethod.GET,"/auth/welcome").hasAnyRole("USER")
+                .antMatchers(HttpMethod.GET,"/auth/welcome").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"/courses-management/list-all").hasAnyRole("ADMIN")
+                .antMatchers(HttpMethod.GET,"/courses-management/list-by-user").hasAnyRole("ADMIN", "PROFESSOR")
+                .antMatchers(HttpMethod.POST,"/courses-management/add").hasAnyRole("ADMIN", "PROFESSOR")
                 .antMatchers(HttpMethod.POST, "/auth/doLogin")
                 .permitAll().anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
