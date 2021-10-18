@@ -1,7 +1,7 @@
-package com.creaskills.accessingdatamysql.filters;
+package com.creaskills.accessingdatamysql.Filters;
 
 import com.creaskills.accessingdatamysql.Services.UserDetailsServiceImpl;
-import com.creaskills.accessingdatamysql.utils.Jwt;
+import com.creaskills.accessingdatamysql.Utils.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;

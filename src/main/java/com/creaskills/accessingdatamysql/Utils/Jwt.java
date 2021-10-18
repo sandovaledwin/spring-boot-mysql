@@ -1,4 +1,4 @@
-package com.creaskills.accessingdatamysql.utils;
+package com.creaskills.accessingdatamysql.Utils;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

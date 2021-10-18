@@ -1,6 +1,6 @@
 package com.creaskills.accessingdatamysql.Configurations;
 
-import com.creaskills.accessingdatamysql.filters.JwtFilter;
+import com.creaskills.accessingdatamysql.Filters.JwtFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,21 +43,21 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-
         http.cors().disable();
         http.csrf().disable();
-        //http.headers().frameOptions().disable();
-
         http.authorizeRequests()
                 .antMatchers(HttpMethod.GET,"/auth/welcome").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.GET,"/courses-management/list-all").hasAnyRole("ADMIN")
                 .antMatchers(HttpMethod.GET,"/courses-management/list-by-user").hasAnyRole("ADMIN", "PROFESSOR")
                 .antMatchers(HttpMethod.POST,"/courses-management/add").hasAnyRole("ADMIN", "PROFESSOR")
+                .antMatchers(HttpMethod.GET,"/courses-management/get-units/{^[\\d]$}").hasAnyRole("ADMIN", "PROFESSOR")
+                .antMatchers(HttpMethod.POST,"/courses-management/save-unit/{^[\\d]$}").hasAnyRole("ADMIN", "PROFESSOR")
+                .antMatchers(HttpMethod.PUT,"/courses-management/update-unit/{^[\\d]$}").hasAnyRole("ADMIN", "PROFESSOR")
+                .antMatchers(HttpMethod.DELETE,"/courses-management/delete-unit/{^[\\d]$}/{^[\\d]$}").hasAnyRole("ADMIN", "PROFESSOR")
                 .antMatchers(HttpMethod.POST, "/auth/doLogin")
                 .permitAll().anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
     }
 

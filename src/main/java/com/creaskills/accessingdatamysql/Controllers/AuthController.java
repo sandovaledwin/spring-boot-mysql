@@ -2,7 +2,7 @@ package com.creaskills.accessingdatamysql.Controllers;
 
 import com.creaskills.accessingdatamysql.Models.AuthRequest;
 import com.creaskills.accessingdatamysql.Models.TokenResponse;
-import com.creaskills.accessingdatamysql.utils.Jwt;
+import com.creaskills.accessingdatamysql.Utils.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.beans.factory.annotation.Autowired;

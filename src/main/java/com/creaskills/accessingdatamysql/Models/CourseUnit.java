@@ -2,11 +2,9 @@ package com.creaskills.accessingdatamysql.Models;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-public class Course {
+public class CourseUnit {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -16,28 +14,13 @@ public class Course {
 
     private String description;
 
-    private String categories;
-
-    private String image;
-
     @Column(nullable = false, name = "creation_date")
     private LocalDateTime creationDate;
 
-    @Column(name = "user_id")
-    private Integer userId;
-
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "courseId")
-    private List<CourseUnit> units = new ArrayList<>();
+    @Column(name = "course_id")
+    private Integer courseId;
 
     private String status;
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
 
     public Integer getId() {
         return id;
@@ -63,28 +46,20 @@ public class Course {
         this.description = description;
     }
 
-    public String getCategories() {
-        return categories;
-    }
-
-    public void setCategories(String categories) {
-        this.categories = categories;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
 
     public void setCreationDate(LocalDateTime creationDate) {
         this.creationDate = creationDate;
+    }
+
+    public Integer getCourseId() {
+        return courseId;
+    }
+
+    public void setCourseId(Integer courseId) {
+        this.courseId = courseId;
     }
 
     public String getStatus() {
@@ -95,26 +70,15 @@ public class Course {
         this.status = status;
     }
 
-    public List<CourseUnit> getUnits() {
-        return units;
-    }
-
-    public void setUnits(List<CourseUnit> units) {
-        this.units = units;
-    }
-
     @Override
     public String toString() {
-        return "Course{" +
+        return "CourseUnits{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
-                ", categories='" + categories + '\'' +
-                ", image='" + image + '\'' +
                 ", creationDate=" + creationDate +
+                ", courseId=" + courseId +
                 ", status='" + status + '\'' +
-                ", userId='" + userId + '\'' +
                 '}';
     }
-
 }

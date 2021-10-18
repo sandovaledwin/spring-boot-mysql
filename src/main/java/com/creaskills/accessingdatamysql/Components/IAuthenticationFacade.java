@@ -1,4 +1,4 @@
-package com.creaskills.accessingdatamysql.components;
+package com.creaskills.accessingdatamysql.Components;
 
 import com.creaskills.accessingdatamysql.Models.UserDetailsImpl;
 import org.springframework.security.core.Authentication;
