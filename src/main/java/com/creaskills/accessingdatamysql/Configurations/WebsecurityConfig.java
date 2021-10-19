@@ -19,6 +19,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
 
+    private static final String[] SWAGGER_WHITELIST = {
+            "/v2/api-docs/**",
+            "/swagger-ui/**",
+            "/swagger-ui.html",
+            "/webjars/**",
+            "/swagger-resources/**"
+    };
+
     @Autowired
     UserDetailsService userDetailsService;
 
@@ -55,7 +63,10 @@ public class WebsecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.PUT,"/courses-management/update-unit/{^[\\d]$}").hasAnyRole("ADMIN", "PROFESSOR")
                 .antMatchers(HttpMethod.DELETE,"/courses-management/delete-unit/{^[\\d]$}/{^[\\d]$}").hasAnyRole("ADMIN", "PROFESSOR")
                 .antMatchers(HttpMethod.POST, "/auth/doLogin")
-                .permitAll().anyRequest().authenticated()
+                .permitAll()
+                .antMatchers(SWAGGER_WHITELIST)
+                .permitAll()
+                .anyRequest().authenticated()
                 .and().exceptionHandling().and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
