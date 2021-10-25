@@ -234,7 +234,7 @@ public class CourseManagamentServiceImpl implements CoursesManagementService {
         newTask.setDescription(task.getDescription());
         newTask.setCreationDate(LocalDateTime.now());
         newTask.setUrl(task.getUrl());
-        newTask.setOrder(task.getOrder());
+        newTask.setPosition(task.getPosition());
         newTask.setUnitId(unit.getId());
         newTask.setStatus(task.getStatus());
         return courseTaskRepository.save(newTask);
@@ -265,7 +265,7 @@ public class CourseManagamentServiceImpl implements CoursesManagementService {
         task.setTitle(modifiedTask.getTitle());
         task.setDescription(modifiedTask.getDescription());
         task.setUrl(modifiedTask.getUrl());
-        task.setOrder(modifiedTask.getOrder());
+        task.setPosition(modifiedTask.getPosition());
         task.setUnitId(unit.getId());
         task.setStatus(modifiedTask.getStatus());
         return courseTaskRepository.save(task);

@@ -19,7 +19,7 @@ public class CourseTask {
 
     private String url;
 
-    private Integer order;
+    private Integer position;
 
     @Column(name = "unit_id")
     private Integer unitId;
@@ -74,12 +74,12 @@ public class CourseTask {
         this.url = url;
     }
 
-    public Integer getOrder() {
-        return order;
+    public Integer getPosition() {
+        return position;
     }
 
-    public void setOrder(Integer order) {
-        this.order = order;
+    public void setPosition(Integer position) {
+        this.position = position;
     }
 
     public String getStatus() {
@@ -99,7 +99,7 @@ public class CourseTask {
                 ", creationDate=" + creationDate +
                 ", unitId=" + unitId +
                 ", url='" + url + '\'' +
-                ", order=" + order +
+                ", order=" + position +
                 ", status='" + status + '\'' +
                 '}';
     }
