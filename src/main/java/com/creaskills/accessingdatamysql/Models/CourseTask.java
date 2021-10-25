@@ -2,11 +2,9 @@ package com.creaskills.accessingdatamysql.Models;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
-public class CourseUnit {
+public class CourseTask {
 
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
@@ -19,11 +17,12 @@ public class CourseUnit {
     @Column(nullable = false, name = "creation_date")
     private LocalDateTime creationDate;
 
-    @Column(name = "course_id")
-    private Integer courseId;
+    private String url;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "unitId")
-    private List<CourseTask> tasks = new ArrayList<>();
+    private Integer order;
+
+    @Column(name = "unit_id")
+    private Integer unitId;
 
     private String status;
 
@@ -59,12 +58,28 @@ public class CourseUnit {
         this.creationDate = creationDate;
     }
 
-    public Integer getCourseId() {
-        return courseId;
+    public Integer getUnitId() {
+        return unitId;
     }
 
-    public void setCourseId(Integer courseId) {
-        this.courseId = courseId;
+    public void setUnitId(Integer unitId) {
+        this.unitId = unitId;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Integer getOrder() {
+        return order;
+    }
+
+    public void setOrder(Integer order) {
+        this.order = order;
     }
 
     public String getStatus() {
@@ -75,22 +90,16 @@ public class CourseUnit {
         this.status = status;
     }
 
-    public List<CourseTask> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<CourseTask> tasks) {
-        this.tasks = tasks;
-    }
-
     @Override
     public String toString() {
-        return "CourseUnits{" +
+        return "CourseTask{" +
                 "id=" + id +
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", creationDate=" + creationDate +
-                ", courseId=" + courseId +
+                ", unitId=" + unitId +
+                ", url='" + url + '\'' +
+                ", order=" + order +
                 ", status='" + status + '\'' +
                 '}';
     }
