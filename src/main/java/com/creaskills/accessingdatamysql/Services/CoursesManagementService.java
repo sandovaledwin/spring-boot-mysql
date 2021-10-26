@@ -3,9 +3,6 @@ package com.creaskills.accessingdatamysql.Services;
 import com.creaskills.accessingdatamysql.Models.Course;
 import com.creaskills.accessingdatamysql.Models.CourseTask;
 import com.creaskills.accessingdatamysql.Models.CourseUnit;
-import io.swagger.models.auth.In;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 

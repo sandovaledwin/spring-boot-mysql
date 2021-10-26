@@ -15,6 +15,11 @@ public class User {
     @Column(name = "user_name")
     private String userName;
 
+    private String name;
+
+    @Column(name = "last_name")
+    private String lastName;
+
     @Column(name = "password")
     private String password;
 
@@ -24,6 +29,8 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id", referencedColumnName = "user_id")
     private List<Course> courses = new ArrayList<>();
+
+    private String status;
 
     public User() {
     }
@@ -70,6 +77,21 @@ public class User {
         this.userName = userName;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
 
     public String getPassword() {
         return password;
@@ -86,6 +108,14 @@ public class User {
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     @Override

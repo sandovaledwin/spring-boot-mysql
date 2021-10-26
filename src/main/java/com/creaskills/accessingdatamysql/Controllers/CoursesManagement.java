@@ -12,7 +12,7 @@ import java.util.List;
 
 @CrossOrigin
 @RestController
-@RequestMapping(path="/courses-management")
+@RequestMapping(path="/admin")
 public class CoursesManagement {
 
     @Autowired
