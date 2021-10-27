@@ -31,4 +31,9 @@ public class UsersManagement {
     UserDTO addNewUser(@RequestBody User newUser) {
         return usersManagement.addNewUser(newUser);
     }
+
+    @PutMapping("user/{userId}")
+    UserDTO updateUser(@PathVariable Integer userId, @RequestBody User user) {
+        return usersManagement.updateUser(userId, user);
+    }
 }

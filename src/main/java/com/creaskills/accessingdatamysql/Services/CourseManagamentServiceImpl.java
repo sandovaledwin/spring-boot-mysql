@@ -3,10 +3,8 @@ package com.creaskills.accessingdatamysql.Services;
 import com.creaskills.accessingdatamysql.Exceptions.CourseNotFoundException;
 import com.creaskills.accessingdatamysql.Exceptions.CourseTaskNotFoundException;
 import com.creaskills.accessingdatamysql.Exceptions.CourseUnitNotFoundException;
-import com.creaskills.accessingdatamysql.Models.Course;
-import com.creaskills.accessingdatamysql.Models.CourseTask;
-import com.creaskills.accessingdatamysql.Models.CourseUnit;
-import com.creaskills.accessingdatamysql.Models.UserDetailsImpl;
+import com.creaskills.accessingdatamysql.Exceptions.UserNotFoundException;
+import com.creaskills.accessingdatamysql.Models.*;
 import com.creaskills.accessingdatamysql.Repositories.CourseTaskRepository;
 import com.creaskills.accessingdatamysql.Repositories.CourseUnitRepository;
 import com.creaskills.accessingdatamysql.Repositories.CoursesRepository;
@@ -40,42 +38,21 @@ public class CourseManagamentServiceImpl implements CoursesManagementService {
     }
 
     public List<Course> getAllCoursesByUser() {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        return userRepository
-                .findByUserName(userName)
-                .getCourses();
+        return getUserInstance().getCourses();
     }
 
     public Course getCourse(Integer courseId) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        return userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(course -> course.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
+        return getCourseById(courseId);
     }
 
     public Course addNewCourse(Course newCourse) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        newCourse.setUserId(userDetails.getUserDetails().getUserId());
+        newCourse.setUserId(authenticationFacade.getUserDetails().getUserId());
         newCourse.setCreationDate(LocalDateTime.now());
         return coursesRepository.save(newCourse);
     }
 
     public Course updateCourse(Course courseModified) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseModified.getId()))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseModified.getId()));
+        Course course = getCourseById(courseModified.getId());
         course.setTitle(courseModified.getTitle());
         course.setDescription(courseModified.getDescription());
         course.setCategories(courseModified.getCategories());
@@ -85,66 +62,25 @@ public class CourseManagamentServiceImpl implements CoursesManagementService {
     }
 
     public void deleteCourse(Integer courseId) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
-        coursesRepository.deleteById(course.getId());
+        coursesRepository.deleteById(getCourseById(courseId).getId());
     }
 
     public List<CourseUnit> getAllUnitsByCourse(Integer courseId) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
-        return course.getUnits();
+        return getCourseById(courseId).getUnits();
     }
 
     public CourseUnit addNewUnit(Integer courseId, CourseUnit unit) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
         CourseUnit newUnit = new CourseUnit();
         newUnit.setTitle(unit.getTitle());
         newUnit.setDescription(unit.getDescription());
         newUnit.setStatus(unit.getStatus());
         newUnit.setCreationDate(LocalDateTime.now());
-        newUnit.setCourseId(course.getId());
+        newUnit.setCourseId(getCourseById(courseId).getId());
         return courseUnitRepository.save(newUnit);
     }
 
     public CourseUnit updateUnit(Integer courseId, CourseUnit unitModified) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
-        CourseUnit unit = course
-                .getUnits()
-                .stream()
-                .filter(u -> u.getId().equals(unitModified.getId()))
-                .findFirst()
-                .orElseThrow(() -> new CourseUnitNotFoundException(unitModified.getId()));
+        CourseUnit unit = getCourseUnit(courseId, unitModified.getId());
         unit.setTitle(unitModified.getTitle());
         unit.setDescription(unitModified.getDescription());
         unit.setStatus(unitModified.getStatus());
@@ -152,147 +88,75 @@ public class CourseManagamentServiceImpl implements CoursesManagementService {
     }
 
     public void deleteUnit(Integer courseId, Integer unitId) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
-        CourseUnit unitFound = course
-                .getUnits()
-                .stream()
-                .filter(u -> u.getId().equals(unitId))
-                .findFirst()
-                .orElseThrow(() -> new CourseUnitNotFoundException(unitId));
-        courseUnitRepository.deleteById(unitFound.getId());
+        courseUnitRepository.deleteById(getCourseUnit(courseId, unitId).getId());
     }
 
     public List<CourseTask> getAllTasksByCourseUnit(Integer courseId, Integer unitId) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
-        CourseUnit unit = course
-                .getUnits()
-                .stream()
-                .filter(u -> u.getId().equals(unitId))
-                .findFirst()
-                .orElseThrow(() -> new CourseUnitNotFoundException(unitId));
-        return unit.getTasks();
+        return getCourseUnit(courseId, unitId).getTasks();
     }
 
     public CourseTask getTask(Integer courseId, Integer unitId, Integer taskId) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
-        CourseUnit unit = course
-                .getUnits()
-                .stream()
-                .filter(u -> u.getId().equals(unitId))
-                .findFirst()
-                .orElseThrow(() -> new CourseUnitNotFoundException(unitId));
-        return unit
-                .getTasks()
-                .stream()
-                .filter(t -> t.getId().equals(taskId))
-                .findFirst()
-                .orElseThrow(() -> new CourseTaskNotFoundException(taskId));
+        return getCourseTask(courseId, unitId, taskId);
     }
 
     public CourseTask addNewTask(Integer courseId, Integer unitId, CourseTask task) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
-        CourseUnit unit = course
-                .getUnits()
-                .stream()
-                .filter(u -> u.getId().equals(unitId))
-                .findFirst()
-                .orElseThrow(() -> new CourseUnitNotFoundException(unitId));
         CourseTask newTask = new CourseTask();
         newTask.setTitle(task.getTitle());
         newTask.setDescription(task.getDescription());
         newTask.setCreationDate(LocalDateTime.now());
         newTask.setUrl(task.getUrl());
         newTask.setPosition(task.getPosition());
-        newTask.setUnitId(unit.getId());
+        newTask.setUnitId(getCourseUnit(courseId, unitId).getId());
         newTask.setStatus(task.getStatus());
         return courseTaskRepository.save(newTask);
     }
 
     public CourseTask updateTask(Integer courseId, Integer unitId, Integer taskId, CourseTask modifiedTask) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
-                .getCourses()
-                .stream()
-                .filter(c -> c.getId().equals(courseId))
-                .findFirst()
-                .orElseThrow(() -> new CourseNotFoundException(courseId));
-        CourseUnit unit = course
-                .getUnits()
-                .stream()
-                .filter(u -> u.getId().equals(unitId))
-                .findFirst()
-                .orElseThrow(() -> new CourseUnitNotFoundException(unitId));
-        CourseTask task = unit
-                .getTasks()
-                .stream()
-                .filter(t -> t.getId().equals(taskId))
-                .findFirst()
-                .orElseThrow(() -> new CourseTaskNotFoundException(taskId));
+        CourseTask task = getCourseTask(courseId, unitId, taskId);
         task.setTitle(modifiedTask.getTitle());
         task.setDescription(modifiedTask.getDescription());
         task.setUrl(modifiedTask.getUrl());
         task.setPosition(modifiedTask.getPosition());
-        task.setUnitId(unit.getId());
         task.setStatus(modifiedTask.getStatus());
         return courseTaskRepository.save(task);
     }
 
     public void deleteTask(Integer courseId, Integer unitId, Integer taskId) {
-        UserDetailsImpl userDetails = authenticationFacade.getPrincipal();
-        String userName = userDetails.getUserDetails().getUserName();
-        Course course = userRepository
-                .findByUserName(userName)
+        courseTaskRepository.deleteById(
+                getCourseTask(courseId, unitId, taskId).getId()
+        );
+    }
+
+    private User getUserInstance() {
+        String currentUser = authenticationFacade.getUserName();
+        return userRepository.findByUserName(currentUser)
+                .orElseThrow(() -> new UserNotFoundException(currentUser));
+    }
+
+    private Course getCourseById(Integer courseId) {
+        return  getUserInstance()
                 .getCourses()
                 .stream()
                 .filter(c -> c.getId().equals(courseId))
                 .findFirst()
                 .orElseThrow(() -> new CourseNotFoundException(courseId));
-        CourseUnit unit = course
+    }
+
+    private CourseUnit getCourseUnit(Integer courseId, Integer unitId) {
+        return getCourseById(courseId)
                 .getUnits()
                 .stream()
                 .filter(u -> u.getId().equals(unitId))
                 .findFirst()
                 .orElseThrow(() -> new CourseUnitNotFoundException(unitId));
-        CourseTask task = unit
+    }
+
+    private CourseTask getCourseTask(Integer courseId, Integer unitId, Integer taskId) {
+        return getCourseUnit(courseId, unitId)
                 .getTasks()
                 .stream()
                 .filter(t -> t.getId().equals(taskId))
                 .findFirst()
                 .orElseThrow(() -> new CourseTaskNotFoundException(taskId));
-        courseTaskRepository.deleteById(task.getId());
     }
 }

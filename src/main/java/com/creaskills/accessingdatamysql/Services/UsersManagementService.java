@@ -11,4 +11,5 @@ public interface UsersManagementService {
     List<UserDTO> getAllUsers();
     UserDTO getUser(Integer userId);
     UserDTO addNewUser(User newUser);
+    UserDTO updateUser(Integer userId, User userUpdated);
 }
