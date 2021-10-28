@@ -21,7 +21,7 @@ public class AccessingDataMysqlApplication {
 	public Docket swaggerConfiguration() {
 		return new Docket(DocumentationType.SWAGGER_2)
 				.select()
-				.paths(PathSelectors.ant("/courses-management/**"))
+				.paths(PathSelectors.ant("/admin/**"))
 				.apis(RequestHandlerSelectors.basePackage("com.creaskills.accessingdatamysql"))
 				.build();
 	}

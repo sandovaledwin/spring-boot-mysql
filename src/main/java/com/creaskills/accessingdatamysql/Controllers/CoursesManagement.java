@@ -1,12 +1,16 @@
 package com.creaskills.accessingdatamysql.Controllers;
 
+import com.creaskills.accessingdatamysql.Exceptions.CourseNotFoundException;
+import com.creaskills.accessingdatamysql.Exceptions.CourseTaskNotFoundException;
+import com.creaskills.accessingdatamysql.Exceptions.CourseUnitNotFoundException;
 import com.creaskills.accessingdatamysql.Models.Course;
 import com.creaskills.accessingdatamysql.Models.CourseTask;
 import com.creaskills.accessingdatamysql.Models.CourseUnit;
 import com.creaskills.accessingdatamysql.Services.CoursesManagementService;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -30,7 +34,13 @@ public class CoursesManagement {
 
     @GetMapping("/course/{courseId}")
     Course getCourse(@PathVariable Integer courseId){
-        return coursesManagement.getCourse(courseId);
+        try {
+            return coursesManagement.getCourse(courseId);
+        } catch (CourseNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "The course doesn't exist", ex);
+        }
+
     }
 
     @PostMapping("/course")
@@ -60,17 +70,32 @@ public class CoursesManagement {
 
     @PutMapping("/unit/{courseId}")
     CourseUnit updateUnit(@PathVariable Integer courseId, @RequestBody CourseUnit unitModified) {
-        return coursesManagement.updateUnit(courseId, unitModified);
+        try {
+            return coursesManagement.updateUnit(courseId, unitModified);
+        } catch (CourseNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "The course doesn't exist", ex);
+        }
     }
 
     @DeleteMapping("/unit/{courseId}/{unitId}")
     void deleteUnit(@PathVariable Integer courseId, @PathVariable Integer unitId) {
-        coursesManagement.deleteUnit(courseId, unitId);
+        try {
+            coursesManagement.deleteUnit(courseId, unitId);
+        } catch (CourseNotFoundException | CourseUnitNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "The course or unit doesn't exist", ex);
+        }
     }
 
     @GetMapping("/tasks/{courseId}/{unitId}")
     List<CourseTask> getAllTasksByCourseUnit(@PathVariable Integer courseId, @PathVariable Integer unitId) {
-        return coursesManagement.getAllTasksByCourseUnit(courseId, unitId);
+        try {
+            return coursesManagement.getAllTasksByCourseUnit(courseId, unitId);
+        } catch (CourseNotFoundException | CourseUnitNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "The course or unit doesn't exist", ex);
+        }
     }
 
     @GetMapping("/tasks/{courseId}/{unitId}/{taskId}")
@@ -78,7 +103,14 @@ public class CoursesManagement {
             @PathVariable Integer courseId,
             @PathVariable Integer unitId,
             @PathVariable Integer taskId) {
-        return coursesManagement.getTask(courseId, unitId, taskId);
+        try {
+            return coursesManagement.getTask(courseId, unitId, taskId);
+        } catch (CourseNotFoundException |
+                CourseUnitNotFoundException |
+                CourseTaskNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "The course, unit or task doesn't exist", ex);
+        }
     }
 
     @PostMapping("/task/{courseId}/{unitId}")
@@ -86,7 +118,12 @@ public class CoursesManagement {
             @PathVariable Integer courseId,
             @PathVariable Integer unitId,
             @RequestBody CourseTask newTask) {
-        return coursesManagement.addNewTask(courseId, unitId, newTask);
+        try {
+            return coursesManagement.addNewTask(courseId, unitId, newTask);
+        } catch (CourseNotFoundException | CourseUnitNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "The course or unit doesn't exist", ex);
+        }
     }
 
     @PutMapping("/task/{courseId}/{unitId}/{taskId}")
@@ -95,7 +132,14 @@ public class CoursesManagement {
             @PathVariable Integer unitId,
             @PathVariable Integer taskId,
             @RequestBody CourseTask task) {
-        return coursesManagement.updateTask(courseId, unitId, taskId, task);
+        try {
+            return coursesManagement.updateTask(courseId, unitId, taskId, task);
+        } catch (CourseNotFoundException |
+                CourseUnitNotFoundException |
+                CourseTaskNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "The course, unit or task doesn't exist", ex);
+        }
     }
 
     @DeleteMapping("/task/{courseId}/{unitId}/{taskId}")
@@ -103,6 +147,13 @@ public class CoursesManagement {
             @PathVariable Integer courseId,
             @PathVariable Integer unitId,
             @PathVariable Integer taskId) {
-        coursesManagement.deleteTask(courseId, unitId, taskId);
+        try {
+            coursesManagement.deleteTask(courseId, unitId, taskId);
+        } catch (CourseNotFoundException |
+                CourseUnitNotFoundException |
+                CourseTaskNotFoundException ex) {
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND, "The course, unit or task doesn't exist", ex);
+        }
     }
 }
