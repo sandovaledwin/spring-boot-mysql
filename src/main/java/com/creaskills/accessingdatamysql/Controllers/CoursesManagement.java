@@ -40,7 +40,6 @@ public class CoursesManagement {
             throw new ResponseStatusException(
                     HttpStatus.NOT_FOUND, "The course doesn't exist", ex);
         }
-
     }
 
     @PostMapping("/course")

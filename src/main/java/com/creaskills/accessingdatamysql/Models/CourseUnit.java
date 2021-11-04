@@ -23,7 +23,10 @@ public class CourseUnit {
     private Integer courseId;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "unitId")
-    private List<CourseTask> tasks = new ArrayList<>();
+    private List<CourseTask> tasks = new ArrayList();
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "unitId")
+    private List<CommentsUnit> comments = new ArrayList();
 
     private String status;
 
@@ -81,6 +84,14 @@ public class CourseUnit {
 
     public void setTasks(List<CourseTask> tasks) {
         this.tasks = tasks;
+    }
+
+    public List<CommentsUnit> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<CommentsUnit> comments) {
+        this.comments = comments;
     }
 
     @Override
