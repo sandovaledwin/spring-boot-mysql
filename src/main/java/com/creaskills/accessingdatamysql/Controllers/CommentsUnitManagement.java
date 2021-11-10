@@ -13,7 +13,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
-@CrossOrigin
 @RestController
 @RequestMapping(path="/admin")
 public class CommentsUnitManagement {
